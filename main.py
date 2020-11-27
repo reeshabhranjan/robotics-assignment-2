@@ -1,16 +1,15 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import json
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def load_config(config_filename: str) -> dict:
+    with open(config_filename) as f:
+        config = json.load(f)
+    return config
 
 
-# Press the green button in the gutter to run the script.
+def pretty_print_config(config: dict):
+    print(json.dumps(config, indent=2, sort_keys=False))
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    config = load_config('config.json')
