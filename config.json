@@ -1,0 +1,40 @@
+{
+  "graph": {
+    "xlim": [
+      0,
+      30
+    ],
+    "ylim": [
+      0,
+      30
+    ],
+    "obstacles": [
+      {
+        "center": [
+          4.5,
+          3
+        ],
+        "radius": 2
+      },
+      {
+        "center": [
+          3,
+          12
+        ],
+        "radius": 2
+      },
+      {
+        "center": [
+          15,
+          15
+        ],
+        "radius": 3
+      }
+    ]
+  },
+  "rrt": {
+    "delta": 1.5
+  },
+  "apf": {
+  }
+}
