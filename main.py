@@ -18,4 +18,6 @@ if __name__ == '__main__':
     graph = Graph(config)
     graph.add_point(Point(6, 6))
     graph.add_line(LineSegment(Point(1, 1), Point(7, 7)))
+    graph.start_point = Point(1, 1)
+    graph.end_point = Point(20, 20)
     graph.show_plot()

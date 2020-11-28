@@ -88,8 +88,8 @@ class Graph:
                           for obstacle in config["graph"]["obstacles"]]
         self.lines: List[LineSegment] = []
         self.paths: List[LineSegment] = []
-        self.start_point = None
-        self.end_point = None
+        self.start_point: Point = None
+        self.end_point: Point = None
         self.points: List[Point] = []
 
     def show_plot(self):
@@ -103,8 +103,18 @@ class Graph:
 
         for line in self.lines:
             axes.plot((line.start.x, line.end.x), (line.start.y, line.end.y), 'g')
+
+        for path in self.paths:
+            axes.plot((line.start.x, line.end.x), (line.start.y, line.end.y), 'r')
+
         for point in self.points:
             axes.plot(point.x, point.y, 'ro')
+
+        if self.start_point is not None:
+            axes.plot(self.start_point.x, self.start_point.y, 'rx')
+
+        if self.end_point is not None:
+            axes.plot(self.end_point.x, self.end_point.y, 'rx')
 
         plt.show()
 
