@@ -19,16 +19,18 @@ class RRT:
 
     def bidirectional_rrt(self):
         for i in range(self.iters):
-            self.expand_tree(self.tree_start)
-            self.expand_tree(self.tree_end)
+            self.__expand_tree(self.tree_start)
+            self.__expand_tree(self.tree_end)
             if self.tree_start - self.tree_end < self.delta:
                 joining_point_start, joining_point_end = self.tree_start.get_closest_pair(self.tree_end)
                 joining_line = LineSegment(joining_point_start, joining_point_end)
                 self.graph.add_path(joining_line)
+                self.__generate_path(self.tree_start, joining_point_start)
+                self.__generate_path(self.tree_end, joining_point_end)
                 break
         self.graph.show_plot()
 
-    def expand_tree(self, tree: Tree):  # TODO fix when line gets out of bounds
+    def __expand_tree(self, tree: Tree):  # TODO fix when line gets out of bounds
         valid = False
         while not valid:
             new_point = self.__get_random_point()
@@ -43,6 +45,14 @@ class RRT:
             valid = True
             self.graph.add_line(joining_line)
             tree.insert(delta_point, nearest_point)
+
+    def __generate_path(self, tree, leaf):
+        node = leaf
+        # while tree.parents[node] is not None:
+        while tree.root != node:
+            joining_line = LineSegment(node, tree.parents[node])
+            self.graph.add_path(joining_line)
+            node = tree.parents[node]
 
     def __get_random_point(self) -> Point:
         rand_x = self.start.x + random() * (self.end.x - self.start.x)

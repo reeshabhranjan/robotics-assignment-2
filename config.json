@@ -33,7 +33,7 @@
     ]
   },
   "rrt": {
-    "delta": 7.5,
+    "delta": 5,
     "iters": 30,
     "start": [
       1,

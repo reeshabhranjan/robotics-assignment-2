@@ -120,10 +120,10 @@ class Graph:
             axes.add_artist(circle)
 
         for line in self.lines:
-            axes.plot((line.start.x, line.end.x), (line.start.y, line.end.y), 'g')
+            axes.plot((line.start.x, line.end.x), (line.start.y, line.end.y), color='g', linewidth=2)
 
         for path in self.paths:
-            axes.plot((path.start.x, path.end.x), (path.start.y, path.end.y), 'r')
+            axes.plot((path.start.x, path.end.x), (path.start.y, path.end.y), 'r--')
 
         for point in self.points:
             axes.plot(point.x, point.y, 'ro')
