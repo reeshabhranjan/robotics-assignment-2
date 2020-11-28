@@ -1,6 +1,7 @@
 from math import sqrt
 from typing import List
 
+import numpy as np
 from matplotlib import pyplot as plt
 
 
@@ -21,15 +22,30 @@ class Point:
     def __add__(self, other):
         return Point(self.x + other.x, self.y + other.y)
 
+    def __mul__(self, other):  # TODO add support for piecewise multiplication
+        return Point(other * self.x, other * self.y)
+
+    __rmul__ = __mul__
+
     def norm(self):
         return sqrt((self.x ** 2) + (self.y ** 2))
 
-    def __cmp__(self, other):
-        point_diff = self - other
-        return point_diff.x * point_diff.y
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __ne__(self, other):
+        return self.x != other.x or self.y != other.y
+
+    def __hash__(self):
+        return hash(str(self))
 
     def to_tuple(self):
         return self.x, self.y
+
+    def slope(self):
+        if self.x != 0:
+            return self.y / self.x
+        return np.sign(self.y) * float("inf")
 
 
 class Circle:
@@ -135,3 +151,17 @@ class Graph:
 
     def add_path(self, path: LineSegment):
         self.paths.append(path)
+
+
+class Tree:
+    def __init__(self, root: Point):
+        self.parents = {root: None}
+        self.root = root
+        self.counter = 0
+
+    def nodes(self):
+        return self.parents
+
+    def insert(self, new_point: Point, parent_point: Point):
+        assert parent_point in self.nodes()
+        self.parents[new_point] = parent_point
