@@ -1,6 +1,6 @@
 import json
 
-from graph import Graph
+from graph import Graph, Point, LineSegment
 
 
 def load_config(config_filename: str) -> dict:
@@ -16,4 +16,6 @@ def pretty_print_config(config: dict):
 if __name__ == '__main__':
     config = load_config('config.json')
     graph = Graph(config)
+    graph.add_point(Point(6, 6))
+    graph.add_line(LineSegment(Point(1, 1), Point(7, 7)))
     graph.show_plot()

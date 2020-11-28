@@ -1,4 +1,5 @@
 from math import sqrt
+from typing import List
 
 from matplotlib import pyplot as plt
 
@@ -28,7 +29,7 @@ class Point:
         return point_diff.x * point_diff.y
 
     def to_tuple(self):
-        return (self.x, self.y)
+        return self.x, self.y
 
 
 class Circle:
@@ -85,14 +86,30 @@ class Graph:
         self.range_end = Point(config["graph"]["xlim"][1], config["graph"]["ylim"][1])
         self.obstacles = [Circle(Point(obstacle["center"][0], obstacle["center"][1]), obstacle["radius"])
                           for obstacle in config["graph"]["obstacles"]]
+        self.lines: List[LineSegment] = []
+        self.paths: List[LineSegment] = []
+        self.start_point = None
+        self.end_point = None
+        self.points: List[Point] = []
 
     def show_plot(self):
         figure, axes = plt.subplots()
-        axes.set_xlim([self.range_start.x, self.range_end.x])
-        axes.set_ylim([self.range_start.y, self.range_end.y])
+        plt.xlim([self.range_start.x, self.range_end.x])
+        plt.ylim([self.range_start.y, self.range_end.y])
 
         for obstacle in self.obstacles:
             circle = plt.Circle(obstacle.center.to_tuple(), obstacle.radius)
             axes.add_artist(circle)
 
+        for line in self.lines:
+            axes.plot((line.start.x, line.end.x), (line.start.y, line.end.y), 'g')
+        for point in self.points:
+            axes.plot(point.x, point.y, 'ro')
+
         plt.show()
+
+    def add_line(self, line: LineSegment):
+        self.lines.append(line)
+
+    def add_point(self, point: Point):
+        self.points.append(point)
