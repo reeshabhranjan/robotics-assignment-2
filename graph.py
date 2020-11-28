@@ -129,7 +129,7 @@ class Graph:
             axes.plot(point.x, point.y, 'ro')
 
         if self.start_point is not None:
-            axes.plot(self.start_point.x, self.start_point.y, 'rx')
+            axes.plot(self.start_point.x, self.start_point.y, 'gx')
 
         if self.end_point is not None:
             axes.plot(self.end_point.x, self.end_point.y, 'rx')
@@ -165,3 +165,22 @@ class Tree:
     def insert(self, new_point: Point, parent_point: Point):
         assert parent_point in self.nodes()
         self.parents[new_point] = parent_point
+
+    def __sub__(self, other):
+        min_dist = float("inf")
+        for self_node in self.nodes():
+            for other_node in other.nodes():
+                min_dist = min(min_dist, self_node.dist(other_node))
+        return min_dist
+
+    def get_closest_pair(self, other):
+        min_dist = float("inf")
+        self_node_min = None
+        other_node_min = None
+        for self_node in self.nodes():
+            for other_node in other.nodes():
+                if self_node.dist(other_node) < min_dist:
+                    min_dist = self_node.dist(other_node)
+                    self_node_min = self_node
+                    other_node_min = other_node
+        return self_node_min, other_node_min

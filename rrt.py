@@ -6,7 +6,6 @@ from graph import Graph, Point, Tree, LineSegment
 
 class RRT:
     def __init__(self, config):
-        self.graph: Graph = Graph(config)
         self.start = Point(config["rrt"]["start"][0], config["rrt"]["start"][1])
         self.end = Point(config["rrt"]["end"][0], config["rrt"]["end"][1])
         self.iters = config["rrt"]["iters"]
@@ -14,13 +13,24 @@ class RRT:
         self.tree_start = Tree(self.start)
         self.tree_end = Tree(self.end)
 
+        self.graph: Graph = Graph(config)
+        self.graph.start_point = self.start
+        self.graph.end_point = self.end
+
     def bidirectional_rrt(self):
-        self.__rrt(self.tree_start)
+        for i in range(self.iters):
+            self.expand_tree(self.tree_start)
+            self.expand_tree(self.tree_end)
+            if self.tree_start - self.tree_end < self.delta:
+                joining_point_start, joining_point_end = self.tree_start.get_closest_pair(self.tree_end)
+                joining_line = LineSegment(joining_point_start, joining_point_end)
+                self.graph.add_path(joining_line)
+                break
         self.graph.show_plot()
 
-    def __rrt(self, tree: Tree):
-        i = 0
-        while i < self.iters:
+    def expand_tree(self, tree: Tree):  # TODO fix when line gets out of bounds
+        valid = False
+        while not valid:
             new_point = self.__get_random_point()
             nearest_point = min(tree.nodes(), key=lambda x: new_point.dist(x))
             diff_point = new_point - nearest_point
@@ -30,9 +40,8 @@ class RRT:
             joining_line = LineSegment(nearest_point, delta_point)
             if self.__line_collides_with_obstacles(joining_line):
                 continue
-            i += 1
+            valid = True
             self.graph.add_line(joining_line)
-            self.graph.add_point(tree.root)
             tree.insert(delta_point, nearest_point)
 
     def __get_random_point(self) -> Point:
