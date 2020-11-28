@@ -91,6 +91,8 @@ class Graph:
         self.start_point: Point = None
         self.end_point: Point = None
         self.points: List[Point] = []
+        self.continuous_x: List[float] = None
+        self.continuous_y: List[float] = None
 
     def show_plot(self):
         figure, axes = plt.subplots()
@@ -105,7 +107,7 @@ class Graph:
             axes.plot((line.start.x, line.end.x), (line.start.y, line.end.y), 'g')
 
         for path in self.paths:
-            axes.plot((line.start.x, line.end.x), (line.start.y, line.end.y), 'r')
+            axes.plot((path.start.x, path.end.x), (path.start.y, path.end.y), 'r')
 
         for point in self.points:
             axes.plot(point.x, point.y, 'ro')
@@ -116,6 +118,9 @@ class Graph:
         if self.end_point is not None:
             axes.plot(self.end_point.x, self.end_point.y, 'rx')
 
+        if self.continuous_x is not None and self.continuous_y is not None:
+            axes.plot(self.continuous_x, self.continuous_y, 'r')
+
         plt.show()
 
     def add_line(self, line: LineSegment):
@@ -123,3 +128,10 @@ class Graph:
 
     def add_point(self, point: Point):
         self.points.append(point)
+
+    def set_continuous_path(self, continuous_x, continuous_y):
+        self.continuous_x = continuous_x
+        self.continuous_y = continuous_y
+
+    def add_path(self, path: LineSegment):
+        self.paths.append(path)
