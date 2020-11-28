@@ -1,5 +1,7 @@
 from math import sqrt
 
+from matplotlib import pyplot as plt
+
 
 class Point:
     def __init__(self, x, y):
@@ -21,9 +23,17 @@ class Point:
     def norm(self):
         return sqrt((self.x ** 2) + (self.y ** 2))
 
+    def __cmp__(self, other):
+        point_diff = self - other
+        return point_diff.x * point_diff.y
+
+    def to_tuple(self):
+        return (self.x, self.y)
+
 
 class Circle:
     def __init__(self, center: Point, radius: float):
+        assert type(center) == Point
         self.center = center
         self.radius = radius
 
@@ -67,3 +77,22 @@ class LineSegment:
                     return False
         else:
             return False
+
+
+class Graph:
+    def __init__(self, config):
+        self.range_start = Point(config["graph"]["xlim"][0], config["graph"]["ylim"][0])
+        self.range_end = Point(config["graph"]["xlim"][1], config["graph"]["ylim"][1])
+        self.obstacles = [Circle(Point(obstacle["center"][0], obstacle["center"][1]), obstacle["radius"])
+                          for obstacle in config["graph"]["obstacles"]]
+
+    def show_plot(self):
+        figure, axes = plt.subplots()
+        axes.set_xlim([self.range_start.x, self.range_end.x])
+        axes.set_ylim([self.range_start.y, self.range_end.y])
+
+        for obstacle in self.obstacles:
+            circle = plt.Circle(obstacle.center.to_tuple(), obstacle.radius)
+            axes.add_artist(circle)
+
+        plt.show()
