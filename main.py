@@ -1,7 +1,6 @@
 import json
 
 from apf import APF
-from rrt import RRT
 
 
 def load_config(config_filename: str) -> dict:
@@ -16,7 +15,7 @@ def pretty_print_config(config: dict):
 
 if __name__ == '__main__':
     config = load_config('config.json')
-    apf = APF(config)
+    apf = APF(config, paraboloid=False)
     apf.apf()
-    rrt = RRT(config)
-    rrt.bidirectional_rrt()
+    # rrt = RRT(config)
+    # rrt.bidirectional_rrt()

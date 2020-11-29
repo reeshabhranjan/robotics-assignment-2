@@ -31,6 +31,12 @@ class Point:
     def __radd__(self, other):
         return self + other
 
+    def __truediv__(self, other):
+        if other == 0:
+            return Point(float("inf"), float("inf"))
+        else:
+            return Point(self.x / other, self.y / other)
+
     __rmul__ = __mul__
 
     def norm(self):
@@ -59,6 +65,9 @@ class Circle:
         assert isinstance(center, Point)
         self.center = center
         self.radius = radius
+
+    def contains_point(self, point: Point):
+        return self.center.dist(point) <= self.radius
 
     def __str__(self):
         return f'center = {self.center}, radius = {self.radius}'
@@ -114,6 +123,7 @@ class Graph:
         self.end_point: Point = None
         self.points: List[Point] = []
         self.continuous_path: List[Point] = []
+        self.arrows: List[LineSegment] = []
 
     def show_plot(self):
         figure, axes = plt.subplots()
@@ -144,7 +154,14 @@ class Graph:
             continuous_y = [point.y for point in self.continuous_path]
             axes.plot(continuous_x, continuous_y, 'r')
 
+        for arrow in self.arrows:
+            axes.arrow(arrow.start.x, arrow.start.y, arrow.end.x, arrow.end.y)
+
         plt.show()
+
+    def add_arrow(self, from_point: Point, to_point: Point):
+        arrow = LineSegment(from_point, to_point)
+        self.arrows.append(arrow)
 
     def add_line(self, line: LineSegment):
         self.lines.append(line)
