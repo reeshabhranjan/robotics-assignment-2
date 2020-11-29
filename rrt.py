@@ -21,7 +21,7 @@ class RRT:
         for i in range(self.iters):
             self.__expand_tree(self.tree_start)
             self.__expand_tree(self.tree_end)
-            if self.tree_start - self.tree_end < self.delta:
+            if self.tree_start - self.tree_end < self.delta:  # TODO optimise this to O(n)
                 joining_point_start, joining_point_end = self.tree_start.get_closest_pair(self.tree_end)
                 joining_line = LineSegment(joining_point_start, joining_point_end)
                 self.graph.add_path(joining_line)

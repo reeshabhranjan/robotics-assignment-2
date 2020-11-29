@@ -20,10 +20,16 @@ class Point:
         return Point(self.x - other.x, self.y - other.y)
 
     def __add__(self, other):
-        return Point(self.x + other.x, self.y + other.y)
+        if isinstance(other, Point):
+            return Point(self.x + other.x, self.y + other.y)
+        else:
+            return Point(self.x + other, self.y + other)
 
     def __mul__(self, other):  # TODO add support for piecewise multiplication
         return Point(other * self.x, other * self.y)
+
+    def __radd__(self, other):
+        return self + other
 
     __rmul__ = __mul__
 
@@ -50,7 +56,7 @@ class Point:
 
 class Circle:
     def __init__(self, center: Point, radius: float):
-        assert type(center) == Point
+        assert isinstance(center, Point)
         self.center = center
         self.radius = radius
 
@@ -107,8 +113,7 @@ class Graph:
         self.start_point: Point = None
         self.end_point: Point = None
         self.points: List[Point] = []
-        self.continuous_x: List[float] = None
-        self.continuous_y: List[float] = None
+        self.continuous_path: List[Point] = []
 
     def show_plot(self):
         figure, axes = plt.subplots()
@@ -134,8 +139,10 @@ class Graph:
         if self.end_point is not None:
             axes.plot(self.end_point.x, self.end_point.y, 'rx')
 
-        if self.continuous_x is not None and self.continuous_y is not None:
-            axes.plot(self.continuous_x, self.continuous_y, 'r')
+        if len(self.continuous_path) > 0:
+            continuous_x = [point.x for point in self.continuous_path]
+            continuous_y = [point.y for point in self.continuous_path]
+            axes.plot(continuous_x, continuous_y, 'r')
 
         plt.show()
 
@@ -145,9 +152,8 @@ class Graph:
     def add_point(self, point: Point):
         self.points.append(point)
 
-    def set_continuous_path(self, continuous_x, continuous_y):
-        self.continuous_x = continuous_x
-        self.continuous_y = continuous_y
+    def add_point_to_continuous_path(self, point: Point):
+        self.continuous_path.append(point)
 
     def add_path(self, path: LineSegment):
         self.paths.append(path)

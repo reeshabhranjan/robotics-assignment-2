@@ -1,5 +1,6 @@
 import json
 
+from apf import APF
 from rrt import RRT
 
 
@@ -15,12 +16,7 @@ def pretty_print_config(config: dict):
 
 if __name__ == '__main__':
     config = load_config('config.json')
+    apf = APF(config)
+    apf.apf()
     rrt = RRT(config)
     rrt.bidirectional_rrt()
-    # graph = Graph(config)
-    # graph.add_point(Point(6, 6))
-    # graph.add_line(LineSegment(Point(1, 1), Point(7, 7)))
-    # graph.start_point = Point(1, 1)
-    # graph.end_point = Point(20, 20)
-    # graph.set_continuous_path([0, 1, 4], [5, 2, 4])
-    # graph.show_plot()
