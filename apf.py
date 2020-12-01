@@ -54,8 +54,11 @@ class APF:
         distance_from_boundary = point.dist(obstacle.center) - obstacle.radius
         if distance_from_boundary > roi:
             return Point(0, 0)
-        derivative = - self.kr * pow((1 / distance_from_boundary - 1 / roi), self.gamma - 1) / pow(
-            distance_from_boundary, 2) * (point - obstacle.center)
+        # TODO removed negative sign
+        e = point - obstacle.center
+        e = e / e.norm()
+        derivative = self.kr * pow((1 / distance_from_boundary - 1 / roi), self.gamma - 1) / pow(
+            distance_from_boundary, 2) * e
         return derivative
 
     def __get_repulsive_potential(self, point: Point, obstacle: Circle) -> Point:
