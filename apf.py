@@ -22,7 +22,11 @@ class APF:
         while point.dist(self.end) > self.convergence_delta:
             point = point - self.__get_total_potential_derivative(point)
             self.graph.add_point_to_continuous_path(point)
-        self.graph.show_plot()
+        if self.paraboloid:
+            graph_name = 'apf_paraboloid'
+        else:
+            graph_name = 'apf_conical'
+        self.graph.plot(graph_name)
 
     def __get_total_potential_derivative(self, point) -> Point:
         repulsive_potential_derivatives = [self.__repulsive_potential_derivative(point, obstacle) for obstacle in

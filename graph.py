@@ -1,3 +1,4 @@
+import os
 from math import sqrt
 from typing import List
 
@@ -125,7 +126,7 @@ class Graph:
         self.continuous_path: List[Point] = []
         self.arrows: List[LineSegment] = []
 
-    def show_plot(self):
+    def plot(self, filename: str):
         figure, axes = plt.subplots()
         plt.xlim([self.range_start.x, self.range_end.x])
         plt.ylim([self.range_start.y, self.range_end.y])
@@ -156,8 +157,14 @@ class Graph:
 
         for arrow in self.arrows:
             axes.arrow(arrow.start.x, arrow.start.y, arrow.end.x, arrow.end.y)
+        plot_dir = "plots/"
 
-        plt.show()
+        axes.title
+
+        if not os.path.isdir(plot_dir):
+            os.mkdir(plot_dir)
+        filepath = f'{plot_dir}{filename}.png'
+        plt.savefig(filepath)
 
     def add_arrow(self, from_point: Point, to_point: Point):
         arrow = LineSegment(from_point, to_point)

@@ -28,7 +28,7 @@ class RRT:
                 self.__generate_path(self.tree_start, joining_point_start)
                 self.__generate_path(self.tree_end, joining_point_end)
                 break
-        self.graph.show_plot()
+        self.graph.plot('rrt')
 
     def __expand_tree(self, tree: Tree):  # TODO fix when line gets out of bounds
         valid = False
@@ -44,6 +44,7 @@ class RRT:
                 continue
             valid = True
             self.graph.add_line(joining_line)
+            self.graph.add_point(delta_point)
             tree.insert(delta_point, nearest_point)
 
     def __generate_path(self, tree, leaf):
