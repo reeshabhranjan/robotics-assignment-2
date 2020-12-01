@@ -21,7 +21,6 @@ class APF:
         while point.dist(self.end) > self.convergence_delta:
             assert point.dist(self.end) < 100
             point = point + self.__get_total_potential_derivative(point) / 10
-            print(point)
             self.graph.add_point_to_continuous_path(point)
         if self.paraboloid:
             graph_name = 'apf_paraboloid'

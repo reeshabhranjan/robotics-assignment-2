@@ -1,6 +1,7 @@
 import json
 
 from apf import APF
+from rrt import RRT
 
 
 def load_config(config_filename: str) -> dict:
@@ -20,6 +21,6 @@ if __name__ == '__main__':
 
     apf_conical = APF(config, paraboloid=False)
     apf_conical.apf()
-    #
-    # rrt = RRT(config)
-    # rrt.bidirectional_rrt()
+
+    rrt = RRT(config)
+    rrt.bidirectional_rrt()
