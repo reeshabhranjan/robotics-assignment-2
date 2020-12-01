@@ -1,5 +1,3 @@
-import numpy as np
-
 from graph import Graph, Point, Circle
 
 
@@ -21,7 +19,9 @@ class APF:
     def apf(self):
         point = self.start
         while point.dist(self.end) > self.convergence_delta:
-            point = point - self.__get_total_potential_derivative(point)
+            assert point.dist(self.end) < 100
+            point = point + self.__get_total_potential_derivative(point) / 10
+            print(point)
             self.graph.add_point_to_continuous_path(point)
         if self.paraboloid:
             graph_name = 'apf_paraboloid'
@@ -35,19 +35,21 @@ class APF:
                                            zip(self.graph.obstacles, self.rois)]
         attractive_potential_derivative = self.__attractive_potential_derivative(point)
         net_potential_derivative = sum(repulsive_potential_derivatives) + attractive_potential_derivative
+        net_potential_derivative = net_potential_derivative / net_potential_derivative.norm()
         return net_potential_derivative
 
     def __attractive_potential_derivative(self, point: Point) -> Point:
         if self.paraboloid:
             derivative = Point(
-                -self.ka * (self.end.x - point.x),
-                -self.ka * (self.end.y - point.y)
+                self.ka * (self.end.x - point.x),
+                self.ka * (self.end.y - point.y)
             )
         else:
             derivative = Point(
-                -self.ka * np.sign(self.end.x - point.x),
-                -self.ka * np.sign(self.end.y - point.y)
+                self.ka * (self.end.x - point.x),
+                self.ka * (self.end.y - point.y)
             )
+            derivative = derivative / derivative.norm()
         return derivative
 
     def __repulsive_potential_derivative(self, point: Point, obstacle: Circle, roi) -> Point:
@@ -60,18 +62,3 @@ class APF:
         derivative = self.kr * pow((1 / distance_from_boundary - 1 / roi), self.gamma - 1) / pow(
             distance_from_boundary, 2) * e
         return derivative
-
-    def __get_repulsive_potential(self, point: Point, obstacle: Circle) -> Point:
-        distance_from_boundary = point.dist(obstacle.center) - obstacle.radius
-        if distance_from_boundary > self.rois:
-            return Point(0, 0)
-        potential = (self.ka / self.gamma) * pow((1 / distance_from_boundary - 1 / self.rois), self.gamma)
-        return potential
-
-    def __get_total_potential(self, point: Point) -> float:
-        # TODO
-        pass
-
-    def __attractive_potential(self, point: Point) -> float:
-        # TODO
-        pass

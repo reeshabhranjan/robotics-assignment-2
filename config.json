@@ -46,9 +46,9 @@
   },
   "apf": {
 	  "rois": [
-		  3,
-		  3,
-		  3
+		  1,
+		  1,
+		  1
 	  ],
 	  "start": [
 		  1,
@@ -58,9 +58,9 @@
 		  20,
 		  20
 	  ],
-	  "ka": 0.001,
-	  "kr": 0.01,
-    "gamma": 2,
-    "convergence_delta": 0.5
+	  "ka": 1,
+	  "kr": 0.5,
+	  "gamma": 2,
+	  "convergence_delta": 1
   }
 }
