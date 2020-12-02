@@ -45,11 +45,11 @@ class Point:
 
     def __eq__(self, other):
         # return self.x == other.x and self.y == other.y
-        return (self.x - other.x) <= 0.01 and (self.y - other.y) <= 0.01
+        return abs(self.x - other.x) <= 0.01 and abs(self.y - other.y) <= 0.01
 
     def __ne__(self, other):
         # return self.x != other.x or self.y != other.y
-        return (self.x - other.x) > 0.01 or (self.y - other.y) > 0.01
+        return abs(self.x - other.x) > 0.01 or abs(self.y - other.y) > 0.01
 
     def __hash__(self):
         return hash(str(self))
@@ -216,3 +216,6 @@ class Tree:
                     self_node_min = self_node
                     other_node_min = other_node
         return self_node_min, other_node_min
+
+    def __str__(self):
+        return f'Tree with root {self.root}'
