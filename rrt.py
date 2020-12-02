@@ -38,7 +38,6 @@ class RRT:
                 else:
                     joining_point_start = joining_point
                     joining_point_end = new_point
-                joining_point_start, joining_point_end = self.tree_start.get_closest_pair(self.tree_end)
                 joining_line = LineSegment(joining_point_start, joining_point_end)
                 self.graph.add_path(joining_line)
                 self.__generate_path(self.tree_start, joining_point_start)

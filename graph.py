@@ -90,6 +90,9 @@ class LineSegment:
     def length(self) -> float:
         return (self.start - self.end).norm()
 
+    def slope(self) -> float:
+        return (self.end.y - self.start.y) / (self.end.x - self.start.x)
+
     def distance_from_point(self, point: Point) -> float:
         a = self.length()
         b = self.start.dist(point)
@@ -104,15 +107,10 @@ class LineSegment:
             if circle.center.dist(self.start) <= circle.radius or circle.center.dist(self.end) <= circle.radius:
                 return True
             else:
-                del_start_x = circle.center.x - self.start.x
-                del_start_y = circle.center.y - self.start.y
-                del_end_x = circle.center.x - self.end.x
-                del_end_y = circle.center.y - self.end.y
-
-                if del_start_x * del_end_x <= 0 or del_start_y * del_end_y <= 0:
-                    return True
-                else:
-                    return False
+                slope_line = self.slope()
+                sign_start_point = (self.start.y - circle.center.y) * slope_line + (self.start.x - circle.center.x)
+                sign_end_point = (self.end.y - circle.center.y) * slope_line + (self.end.x - circle.center.x)
+                return sign_end_point * sign_start_point <= 0
         else:
             return False
 
