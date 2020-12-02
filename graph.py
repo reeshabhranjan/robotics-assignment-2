@@ -17,6 +17,9 @@ class Point:
     def __str__(self):
         return f'({self.x}, {self.y})'
 
+    def __repr__(self):
+        return str(self)
+
     def __sub__(self, other):
         return Point(self.x - other.x, self.y - other.y)
 
@@ -148,9 +151,11 @@ class Graph:
 
         if self.start_point is not None:
             axes.plot(self.start_point.x, self.start_point.y, 'gx')
+            axes.text(self.start_point.x, self.start_point.y, 'start')
 
         if self.end_point is not None:
             axes.plot(self.end_point.x, self.end_point.y, 'rx')
+            axes.text(self.end_point.x, self.end_point.y, 'end')
 
         if len(self.continuous_path) > 0:
             continuous_x = [point.x for point in self.continuous_path]
@@ -161,7 +166,7 @@ class Graph:
             axes.arrow(arrow.start.x, arrow.start.y, arrow.end.x, arrow.end.y)
         plot_dir = "plots/"
 
-        axes.title
+        axes.title.set_text(filename)
 
         if not os.path.isdir(plot_dir):
             os.mkdir(plot_dir)
@@ -216,6 +221,18 @@ class Tree:
                     self_node_min = self_node
                     other_node_min = other_node
         return self_node_min, other_node_min
+
+    def get_shortest_clear_path_to_point(self, point: Point, obstacles: List[Circle]):
+        closest_node = None
+        closes_distance = float("inf")
+        for node in self.nodes():
+            line_joining = LineSegment(node, point)
+            if any([line_joining.intersects_circle(obstacle) for obstacle in obstacles]):
+                continue
+            if node.dist(point) < closes_distance:
+                closes_distance = node.dist(point)
+                closest_node = node
+        return closest_node
 
     def __str__(self):
         return f'Tree with root {self.root}'
