@@ -19,6 +19,7 @@ class RRT:
 
     def bidirectional_rrt(self):
         for i in range(self.iters):
+            # TODO fix algo
             self.__expand_tree(self.tree_start)
             self.__expand_tree(self.tree_end)
             if self.tree_start - self.tree_end < self.delta:  # TODO optimise this to O(n)

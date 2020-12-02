@@ -8,8 +8,8 @@ from matplotlib import pyplot as plt
 
 class Point:
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        self.x = round(x, 3)
+        self.y = round(y, 3)
 
     def dist(self, other) -> float:
         return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
@@ -44,10 +44,12 @@ class Point:
         return sqrt((self.x ** 2) + (self.y ** 2))
 
     def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
+        # return self.x == other.x and self.y == other.y
+        return (self.x - other.x) <= 0.01 and (self.y - other.y) <= 0.01
 
     def __ne__(self, other):
-        return self.x != other.x or self.y != other.y
+        # return self.x != other.x or self.y != other.y
+        return (self.x - other.x) > 0.01 or (self.y - other.y) > 0.01
 
     def __hash__(self):
         return hash(str(self))
