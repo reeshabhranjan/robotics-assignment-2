@@ -12,7 +12,6 @@ class RRT:
     def __init__(self, config):
         self.start = Point(config["rrt"]["start"][0], config["rrt"]["start"][1])
         self.end = Point(config["rrt"]["end"][0], config["rrt"]["end"][1])
-        self.iters = config["rrt"]["iters"]
         self.delta = config["rrt"]["delta"]
         self.tree_start = Tree(self.start)
         self.tree_end = Tree(self.end)
@@ -60,8 +59,8 @@ class RRT:
         :param tree:
         :return:
         """
-        valid = False
-        while not valid:
+
+        while True:
             random_point = self.__get_random_point()
             nearest_point = min(tree.nodes(), key=lambda x: random_point.dist(x))
             if random_point.dist(nearest_point) <= self.delta:
@@ -74,11 +73,10 @@ class RRT:
             joining_line = LineSegment(nearest_point, delta_point)
             if self.__line_collides_with_obstacles(joining_line):
                 continue
-            valid = True
             self.graph.add_line(joining_line)
             self.graph.add_point(delta_point)
             tree.insert(delta_point, nearest_point)
-        return delta_point
+            return delta_point
 
     def __generate_path(self, tree, leaf):
         """

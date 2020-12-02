@@ -34,7 +34,6 @@
   },
   "rrt": {
     "delta": 5,
-    "iters": 30,
     "start": [
       1,
       1
@@ -51,16 +50,16 @@
         1
       ],
 	  "start": [
-		  1,
-		  1
-	  ],
-	  "end": [
-		  20,
-		  20
-	  ],
-	  "ka": 1,
-	  "kr": 0.5,
-	  "gamma": 2,
-	  "convergence_delta": 1
+        1,
+        1
+      ],
+    "end": [
+      20,
+      20
+    ],
+    "ka": 1,
+    "kr": 0.5,
+    "gamma": 2,
+    "convergence_delta": 0.5
   }
 }
