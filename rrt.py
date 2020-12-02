@@ -5,6 +5,10 @@ from graph import Graph, Point, Tree, LineSegment
 
 
 class RRT:
+    """
+    This class contains all the data related to RRT algo.
+    """
+
     def __init__(self, config):
         self.start = Point(config["rrt"]["start"][0], config["rrt"]["start"][1])
         self.end = Point(config["rrt"]["end"][0], config["rrt"]["end"][1])
@@ -18,6 +22,10 @@ class RRT:
         self.graph.end_point = self.end
 
     def bidirectional_rrt(self):
+        """
+        Runs the bidirectional RRT and saves the plot to a file.
+        :return:
+        """
         connected = False
         expand_tree_start = True
         while not connected:
@@ -47,6 +55,11 @@ class RRT:
         self.graph.plot('rrt')
 
     def __expand_tree(self, tree: Tree):  # TODO fix when line gets out of bounds
+        """
+        Inserts one new node to a given tree as per RRT.
+        :param tree:
+        :return:
+        """
         valid = False
         while not valid:
             random_point = self.__get_random_point()
@@ -68,6 +81,12 @@ class RRT:
         return delta_point
 
     def __generate_path(self, tree, leaf):
+        """
+        Generates the path from the leaf to the tree in the graph.
+        :param tree:
+        :param leaf:
+        :return:
+        """
         node = leaf
         # while tree.parents[node] is not None:
         while tree.root != node:
@@ -76,12 +95,19 @@ class RRT:
             node = tree.parents[node]
 
     def __get_random_point(self) -> Point:
+        """
+        Returns a random point as per the bounds of the current graph limits.
+        :return:
+        """
         rand_x = self.start.x + random() * (self.end.x - self.start.x)
         rand_y = self.start.y + random() * (self.end.y - self.start.y)
         return Point(rand_x, rand_y)
 
     def __line_collides_with_obstacles(self, line: LineSegment):
-        for obstacle in self.graph.obstacles:
-            if line.intersects_circle(obstacle):
-                return True
-        return False
+        """
+        Checks if a line collides with any obstacle or not.
+        :param line:
+        :return:
+        """
+
+        return any([line.intersects_circle(obstacle) for obstacle in self.graph.obstacles])

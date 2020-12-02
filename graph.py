@@ -7,6 +7,13 @@ from matplotlib import pyplot as plt
 
 
 class Point:
+    """
+    This is the 2D point class. It takes in float values for the x and y-coordinates.
+    To avoid precision errors, it rounds off values to 3 decimal places.
+    Similarly, for equating two points, I have checked the distance between the points
+    upto a threshold until which I can tell if they are same or different points.
+    """
+
     def __init__(self, x, y):
         self.x = round(x, 3)
         self.y = round(y, 3)
@@ -47,11 +54,9 @@ class Point:
         return sqrt((self.x ** 2) + (self.y ** 2))
 
     def __eq__(self, other):
-        # return self.x == other.x and self.y == other.y
         return abs(self.x - other.x) <= 0.01 and abs(self.y - other.y) <= 0.01
 
     def __ne__(self, other):
-        # return self.x != other.x or self.y != other.y
         return abs(self.x - other.x) > 0.01 or abs(self.y - other.y) > 0.01
 
     def __hash__(self):
@@ -67,12 +72,22 @@ class Point:
 
 
 class Circle:
+    """
+    This is the 2D-circle class. It takes in a Point object as the center and a
+    float object as the radius.
+    """
+
     def __init__(self, center: Point, radius: float):
         assert isinstance(center, Point)
         self.center = center
         self.radius = radius
 
     def contains_point(self, point: Point):
+        """
+        This function checks if the circle contains the point.
+        :param point:
+        :return: bool
+        """
         return self.center.dist(point) <= self.radius
 
     def __str__(self):
@@ -80,6 +95,11 @@ class Circle:
 
 
 class LineSegment:
+    """
+    This is a 2D-line class. It takes in two Point objects as the endpoints of
+    the line.
+    """
+
     def __init__(self, start: Point, end: Point):
         self.start = start
         self.end = end
@@ -88,12 +108,25 @@ class LineSegment:
         return f'start = {self.start}, end = {self.end}'
 
     def length(self) -> float:
+        """
+        Returns length of the line.
+        :return: float
+        """
         return (self.start - self.end).norm()
 
     def slope(self) -> float:
+        """
+        Returns slope of the line.
+        :return: float
+        """
         return (self.end.y - self.start.y) / (self.end.x - self.start.x)
 
     def distance_from_point(self, point: Point) -> float:
+        """
+        Returns the perpendicular distance from a point.
+        :param point:
+        :return: float
+        """
         a = self.length()
         b = self.start.dist(point)
         c = self.end.dist(point)
@@ -103,6 +136,11 @@ class LineSegment:
         return distance
 
     def intersects_circle(self, circle: Circle):
+        """
+        Checks if the current line segment intersects with a circle.
+        :param circle:
+        :return: bool
+        """
         if self.distance_from_point(circle.center) <= circle.radius:
             if circle.center.dist(self.start) <= circle.radius or circle.center.dist(self.end) <= circle.radius:
                 return True
@@ -116,6 +154,13 @@ class LineSegment:
 
 
 class Graph:
+    """
+    This is the Graph class. It is initialized using a configuration dictionary.
+    It can contain all types of objects (Point, Circle, Line) in a graph.
+    It also has a function plot() that will save the current state of the graph
+    as a PNG image to the plots/ subdirectory.
+    """
+
     def __init__(self, config):
         self.range_start = Point(config["graph"]["xlim"][0], config["graph"]["ylim"][0])
         self.range_end = Point(config["graph"]["xlim"][1], config["graph"]["ylim"][1])
@@ -130,6 +175,11 @@ class Graph:
         self.arrows: List[LineSegment] = []
 
     def plot(self, filename: str):
+        """
+        Plots the state of the graph into a file.
+        :param filename:
+        :return: None
+        """
         figure, axes = plt.subplots()
         plt.xlim([self.range_start.x, self.range_end.x])
         plt.ylim([self.range_start.y, self.range_end.y])
@@ -189,19 +239,42 @@ class Graph:
 
 
 class Tree:
+    """
+    This is the Tree class. It implements a Tree structure where the nodes
+    are of type Point. In order to maintain the structure, a dictionary named
+    parents is defined. It defines the mapping from child to its parent node (point).
+    In order to allow Point to support hashing, a __hash__ and __eq__ is defined in
+    the Point class.
+    """
+
     def __init__(self, root: Point):
         self.parents = {root: None}
         self.root = root
         self.counter = 0
 
     def nodes(self):
+        """
+        Returns an iterable of the nodes in this tree.
+        :return: dict
+        """
         return self.parents
 
     def insert(self, new_point: Point, parent_point: Point):
+        """
+        Inserts a new point into the current tree.
+        :param new_point:
+        :param parent_point:
+        :return: None
+        """
         assert parent_point in self.nodes()
         self.parents[new_point] = parent_point
 
-    def __sub__(self, other):
+    def __sub__(self, other) -> float:
+        """
+        Returns the shortest distance between two trees regardless of obstacles.
+        :param other:
+        :return: float
+        """
         min_dist = float("inf")
         for self_node in self.nodes():
             for other_node in other.nodes():
@@ -209,6 +282,12 @@ class Tree:
         return min_dist
 
     def get_closest_pair(self, other):
+        """
+        Returns the pair of points in two trees closes to each other regardlesso
+        of obstacles.
+        :param other:
+        :return: tuple(Point, Point)
+        """
         min_dist = float("inf")
         self_node_min = None
         other_node_min = None
@@ -220,7 +299,14 @@ class Tree:
                     other_node_min = other_node
         return self_node_min, other_node_min
 
-    def get_shortest_clear_path_to_point(self, point: Point, obstacles: List[Circle]):
+    def get_shortest_clear_path_to_point(self, point: Point, obstacles: List[Circle]) -> Point:
+        """
+        Returns the point in the current tree closes to a given point considering all the
+        obstacles. Returns None if no such point exists.
+        :param point:
+        :param obstacles:
+        :return:
+        """
         closest_node = None
         closes_distance = float("inf")
         for node in self.nodes():

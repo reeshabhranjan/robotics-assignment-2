@@ -2,6 +2,10 @@ from graph import Graph, Point, Circle
 
 
 class APF:
+    """
+    This class contains all the date related to APF algo.
+    """
+
     def __init__(self, config, paraboloid=True):
         self.graph = Graph(config)
         self.rois = config["apf"]["rois"]
@@ -17,6 +21,10 @@ class APF:
         self.paraboloid = paraboloid
 
     def apf(self):
+        """
+        Runs the APF algo and saves the plot to a file.
+        :return:
+        """
         point = self.start
         while point.dist(self.end) > self.convergence_delta:
             assert point.dist(self.end) < 100
@@ -29,6 +37,11 @@ class APF:
         self.graph.plot(graph_name)
 
     def __get_total_potential_derivative(self, point) -> Point:
+        """
+        Returns the total potential derivative at a point.
+        :param point:
+        :return: Point
+        """
         repulsive_potential_derivatives = [self.__repulsive_potential_derivative(point, obstacle, roi) for
                                            (obstacle, roi) in
                                            zip(self.graph.obstacles, self.rois)]
@@ -38,6 +51,11 @@ class APF:
         return net_potential_derivative
 
     def __attractive_potential_derivative(self, point: Point) -> Point:
+        """
+        Returns the attractive potential derivative at a point.
+        :param point:
+        :return: Point
+        """
         if self.paraboloid:
             derivative = Point(
                 self.ka * (self.end.x - point.x),
@@ -52,6 +70,13 @@ class APF:
         return derivative
 
     def __repulsive_potential_derivative(self, point: Point, obstacle: Circle, roi) -> Point:
+        """
+        Returns the repulsive potential derivative at a point by a given obstacle.
+        :param point:
+        :param obstacle:
+        :param roi:
+        :return: Point
+        """
         distance_from_boundary = point.dist(obstacle.center) - obstacle.radius
         if distance_from_boundary > roi:
             return Point(0, 0)
